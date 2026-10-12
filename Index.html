@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Evgeniya Ukhina | Architecture & Design</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Проверяем язык браузера
+        var language = window.navigator.userLanguage || window.navigator.language;
+        if (language.indexOf('ru') !== -1) {
+            window.location.replace("ru/index.html"); // Переход на русскую версию
+        } else {
+            window.location.replace("en/index.html"); // Переход на английскую версию
+        }
+    </script>
+</head>
+<body style="background-color: #F6F4F1; font-family: sans-serif; text-align: center; padding-top: 20%;">
+    <p>Перенаправление / Redirecting...</p>
+</body>
+</html>
