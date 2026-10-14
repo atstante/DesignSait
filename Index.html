@@ -2,19 +2,445 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Evgeniya Ukhina | Architecture & Design</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script>
-        // Проверяем язык браузера
-        var language = window.navigator.userLanguage || window.navigator.language;
-        if (language.indexOf('ru') !== -1) {
-            window.location.replace("ru/index.html"); // Переход на русскую версию
-        } else {
-            window.location.replace("en/index.html"); // Переход на английскую версию
+    <title>Евгения Ухина | Архитектура и Дизайн</title>
+    
+    <!-- Современные шрифты без засечек -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================= ПЕРЕМЕННЫЕ И ПАЛИТРА ================= */
+        :root {
+            --bg-color: #ffffff; /* Чистый белый */
+            --text-color: #111111; /* Почти черный */
+            --text-light: #555555;
+            --accent-color: #2b45ff; /* Яркий синий/индиго для энергии */
+            --accent-hover: #9c63ff; /* Лавандовый оттенок для наведения */
+            --section-bg: #f4f4f6; /* Светло-серый для выделения блоков */
+            
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
         }
-    </script>
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        a { text-decoration: none; color: inherit; }
+
+        /* ================= БАЗОВЫЕ АНИМАЦИИ (SCROLL) ================= */
+        .reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ================= ШАПКА ================= */
+        header {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 25px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000;
+            transition: 0.4s;
+            mix-blend-mode: difference;
+            color: #fff;
+        }
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            mix-blend-mode: normal;
+            color: var(--text-color);
+            padding: 15px 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 24px; font-weight: 800; text-transform: uppercase;
+        }
+        .nav-links { display: flex; gap: 40px; font-size: 14px; font-weight: 500; }
+        .nav-links a { transition: color 0.3s; }
+        .nav-links a:hover { color: var(--accent-hover); }
+        .lang-switch a { margin-left: 15px; font-weight: 500; opacity: 0.4; transition: 0.3s; }
+        .lang-switch a.active, .lang-switch a:hover { opacity: 1; }
+
+        /* ================= HERO СЕКЦИЯ (ГЛАВНЫЙ ЭКРАН) ================= */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 10%;
+            position: relative;
+            background-color: var(--section-bg);
+            overflow: hidden;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+        /* Анимация маски текста (слова выезжают снизу вверх) */
+        .text-mask { overflow: hidden; display: block; }
+        .text-mask span {
+            display: block;
+            transform: translateY(100%);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .hero h1 {
+            font-family: var(--font-heading);
+            font-size: 5.5vw;
+            line-height: 1.1;
+            font-weight: 800;
+            margin-bottom: 30px;
+            color: var(--text-color);
+        }
+        .text-mask:nth-child(2) span { animation-delay: 0.1s; }
+        .text-mask:nth-child(3) span { animation-delay: 0.2s; }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 500px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeIn 1s 0.6s forwards;
+        }
+        
+        /* Анимация картинки на фоне (Clip-path reveal) */
+        .hero-image {
+            position: absolute;
+            right: 0; top: 0;
+            width: 50%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80') center/cover;
+            clip-path: inset(100% 0 0 0);
+            animation: revealImage 1.5s 0.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes slideUp { to { transform: translateY(0); } }
+        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes revealImage { to { clip-path: inset(0 0 0 0); } }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: var(--text-color);
+            color: #fff;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            border-radius: 4px;
+            transition: all 0.3s;
+            opacity: 0;
+            animation: fadeIn 1s 0.8s forwards;
+        }
+        .btn:hover {
+            background: var(--accent-color);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(43, 69, 255, 0.2);
+        }
+
+        /* ================= ВХОДНЫЕ УСЛУГИ (ОТДЕЛЬНЫЙ БЛОК) ================= */
+        .entry-services {
+            padding: 120px 10%;
+            background-color: var(--bg-color);
+        }
+        .section-header {
+            margin-bottom: 60px;
+        }
+        .section-header h2 {
+            font-family: var(--font-heading);
+            font-size: 48px;
+            font-weight: 700;
+        }
+        .entry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        .entry-card {
+            background: var(--section-bg);
+            padding: 60px 50px;
+            border-radius: 8px;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .entry-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 4px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: 0.4s;
+        }
+        .entry-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            background: #fff;
+        }
+        .entry-card:hover::before { transform: scaleX(1); }
+        
+        .entry-card h3 {
+            font-family: var(--font-heading);
+            font-size: 28px; margin-bottom: 20px;
+        }
+        .entry-card p { color: var(--text-light); margin-bottom: 40px; font-size: 16px;}
+        .entry-card a { font-weight: 600; text-decoration: underline; color: var(--accent-color); }
+
+        /* ================= ОБО МНЕ (С ЛАВАНДОВЫМ ФОТО) ================= */
+        .about {
+            padding: 120px 10%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .about-img {
+            width: 100%;
+            border-radius: 8px;
+            /* Ваше загруженное фото */
+            background: url('https://i.ibb.co/3WfK5fL/lavender.jpg') center/cover; 
+            aspect-ratio: 4/5;
+            position: relative;
+        }
+        .about-text h2 {
+            font-family: var(--font-heading);
+            font-size: 40px; margin-bottom: 30px;
+        }
+        .about-text p {
+            font-size: 18px; margin-bottom: 20px; color: var(--text-light);
+        }
+
+        /* ================= ПОРТФОЛИО (АНИМИРОВАННОЕ) ================= */
+        .portfolio { padding: 0 10% 120px; }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+        }
+        .portfolio-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+        }
+        .portfolio-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        /* СОВРЕМЕННАЯ АНИМАЦИЯ НАВЕДЕНИЯ НА ПОРТФОЛИО */
+        .portfolio-info {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 40px;
+            background: linear-gradient(to top, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0) 100%);
+            color: #fff;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.4s ease;
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.05);
+        }
+        .portfolio-item:hover .portfolio-info {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        /* Цветная декоративная плашка, выезжающая сбоку */
+        .portfolio-info::before {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: var(--accent-hover);
+            mix-blend-mode: color;
+            opacity: 0;
+            transition: 0.5s;
+            z-index: -1;
+        }
+        .portfolio-item:hover .portfolio-info::before { opacity: 0.6; }
+
+        .portfolio-info h3 { font-family: var(--font-heading); font-size: 28px; margin-bottom: 5px;}
+        .portfolio-info span { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;}
+
+        /* ПЛАВАЮЩИЕ КНОПКИ СВЯЗИ */
+        .floating-messengers {
+            position: fixed; bottom: 30px; right: 30px;
+            display: flex; flex-direction: column; gap: 15px; z-index: 1000;
+        }
+        .messenger-btn {
+            width: 55px; height: 55px;
+            background: var(--text-color); color: #fff;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-family: var(--font-heading); font-weight: 700; font-size: 12px;
+            transition: 0.3s;
+        }
+        .messenger-btn:hover { background: var(--accent-color); transform: translateY(-5px); }
+
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 900px) {
+            .hero { padding-top: 100px; flex-direction: column; justify-content: center;}
+            .hero-image { position: relative; width: 100%; height: 40vh; margin-top: 40px; clip-path: none;}
+            .hero h1 { font-size: 42px; }
+            .entry-grid, .about, .portfolio-grid { grid-template-columns: 1fr; }
+            .about { padding: 80px 5%; }
+            header { padding: 15px 20px; }
+        }
+    </style>
 </head>
-<body style="background-color: #F6F4F1; font-family: sans-serif; text-align: center; padding-top: 20%;">
-    <p>Перенаправление / Redirecting...</p>
+<body>
+
+    <!-- ШАПКА -->
+    <header id="header">
+        <div class="logo">E.Ukhina</div>
+        <nav class="nav-links">
+            <a href="#start">С чего начать</a>
+            <a href="#about">Обо мне</a>
+            <a href="#portfolio">Портфолио</a>
+        </nav>
+        <div class="lang-switch">
+            <a href="index.html" class="active">RU</a>
+            <a href="en/index.html">EN</a>
+        </div>
+    </header>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="text-mask"><span>Архитектура</span></span>
+                <span class="text-mask"><span>и дизайн</span></span>
+                <span class="text-mask"><span>пространств.</span></span>
+            </h1>
+            <p>Свежий взгляд, увлеченность своим делом и большой практический опыт в проектировании и реализации.</p>
+            <a href="#start" class="btn">Обсудить проект</a>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+
+    <!-- ТОЧКИ ВХОДА (ВХОДНЫЕ УСЛУГИ) -->
+    <section id="start" class="entry-services">
+        <div class="section-header reveal">
+            <h2>Первый шаг к идеальному дому</h2>
+        </div>
+        <div class="entry-grid">
+            
+            <div class="entry-card reveal">
+                <div>
+                    <h3>Консультация и аудит<br>перед покупкой</h3>
+                    <p>Независимая экспертиза недвижимости. Оценка потенциала участка, анализ планировки квартиры от застройщика. Я помогу вам сделать правильный выбор и избежать ошибок, опираясь на архитектурный расчет, а не на обещания риелторов.</p>
+                </div>
+                <a href="#">Записаться на онлайн-интервью →</a>
+            </div>
+
+            <div class="entry-card reveal" style="transition-delay: 0.1s;">
+                <div>
+                    <h3>Экспресс-планировка<br>и обмер</h3>
+                    <p>Фундамент любого грамотного ремонта. Профессиональный обмерный план и разработка эргономичного планировочного решения. Идеально для тех, кто планирует руководить ремонтом самостоятельно, но нуждается в твердой базе.</p>
+                </div>
+                <a href="#">Заказать планировку →</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ОБО МНЕ (С ВАШИМ ФОТО ИЗ СООБЩЕНИЯ) -->
+    <section id="about" class="about">
+        <div class="about-img reveal"></div>
+        <div class="about-text reveal">
+            <h2>Живой ум и творческая смелость</h2>
+            <p>Мой подход — это симбиоз инженерной точности и свободного художественного видения. Я глубоко увлечена процессом: от первого наброска карандашом на бумаге до финальной расстановки света в готовом интерьере.</p>
+            <p>Большой опыт реализации проектов позволяет мне создавать не просто красивые 3D-картинки, а технически безупречные, живые пространства. Пространства, которые дышат вместе с вами.</p>
+            <p>Моя страсть — находить нестандартные объемно-пространственные решения, которые превращают стандартную коробку в дом вашей мечты.</p>
+        </div>
+    </section>
+
+    <!-- ПОРТФОЛИО -->
+    <section id="portfolio" class="portfolio">
+        <div class="section-header reveal">
+            <h2>Избранные проекты</h2>
+        </div>
+        <div class="portfolio-grid">
+            
+            <div class="portfolio-item reveal">
+                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80" alt="Проект 1">
+                <div class="portfolio-info">
+                    <span>Реализация</span>
+                    <h3>Видовая квартира</h3>
+                </div>
+            </div>
+
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="https://images.unsplash.com/photo-1613490908578-791cd9391054?auto=format&fit=crop&q=80" alt="Проект 2">
+                <div class="portfolio-info">
+                    <span>Архитектура</span>
+                    <h3>Лесная Вилла</h3>
+                </div>
+            </div>
+
+            <div class="portfolio-item reveal">
+                <img src="https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80" alt="Проект 3">
+                <div class="portfolio-info">
+                    <span>Концепт</span>
+                    <h3>Ручная графика</h3>
+                </div>
+            </div>
+
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80" alt="Проект 4">
+                <div class="portfolio-info">
+                    <span>Дизайн</span>
+                    <h3>Апартаменты</h3>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- МЕССЕНДЖЕРЫ -->
+    <div class="floating-messengers">
+        <a href="#" class="messenger-btn">TG</a>
+        <a href="#" class="messenger-btn">WA</a>
+    </div>
+
+    <!-- СКРИПТ АНИМАЦИИ ПРИ ПРОКРУТКЕ -->
+    <script>
+        // Смена фона шапки
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
+        // Анимация Reveal при скролле
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
 </body>
 </html>
