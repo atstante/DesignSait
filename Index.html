@@ -8,7 +8,7 @@
     <!-- Современные шрифты без засечек -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
 
     <style>
         /* ================= ПЕРЕМЕННЫЕ И ПАЛИТРА ================= */
@@ -20,7 +20,7 @@
             --accent-hover: #9c63ff; /* Лавандовый оттенок для наведения */
             --section-bg: #f4f4f6; /* Светло-серый для выделения блоков */
             
-            --font-heading: 'Syne', sans-serif;
+            --font-heading: 'Montserrat', sans-serif;
             --font-body: 'Inter', sans-serif;
         }
 
@@ -67,6 +67,7 @@
         .logo {
             font-family: var(--font-heading);
             font-size: 24px; font-weight: 800; text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
         .nav-links { display: flex; gap: 40px; font-size: 14px; font-weight: 500; }
         .nav-links a { transition: color 0.3s; }
@@ -90,16 +91,23 @@
             max-width: 800px;
         }
         /* Анимация маски текста (слова выезжают снизу вверх) */
-        .text-mask { overflow: hidden; display: block; }
+        .text-mask {
+            overflow: hidden;
+            display: block;
+            /* Запас под выносные элементы букв (р, ц, щ), чтобы маска их не срезала */
+            padding-bottom: 0.15em;
+            margin-bottom: -0.15em;
+        }
         .text-mask span {
             display: block;
-            transform: translateY(100%);
+            transform: translateY(115%);
             animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         .hero h1 {
             font-family: var(--font-heading);
             font-size: 5.5vw;
             line-height: 1.1;
+            letter-spacing: 0.02em;
             font-weight: 800;
             margin-bottom: 30px;
             color: var(--text-color);
@@ -137,9 +145,10 @@
             background: var(--text-color);
             color: #fff;
             font-family: var(--font-heading);
-            font-weight: 700;
+            font-weight: 500;
             font-size: 14px;
             text-transform: uppercase;
+            letter-spacing: 0.12em;
             border-radius: 4px;
             transition: all 0.3s;
             opacity: 0;
@@ -163,6 +172,7 @@
             font-family: var(--font-heading);
             font-size: 48px;
             font-weight: 700;
+            letter-spacing: 0.03em;
         }
         .entry-grid {
             display: grid;
@@ -197,33 +207,113 @@
         .entry-card h3 {
             font-family: var(--font-heading);
             font-size: 28px; margin-bottom: 20px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
         }
         .entry-card p { color: var(--text-light); margin-bottom: 40px; font-size: 16px;}
-        .entry-card a { font-weight: 600; text-decoration: underline; color: var(--accent-color); }
+        .entry-card a { font-weight: 500; text-decoration: underline; color: var(--accent-color); }
 
-        /* ================= ОБО МНЕ (С ЛАВАНДОВЫМ ФОТО) ================= */
+        /* ================= ОБО МНЕ (КОМПАКТНЫЙ БЛОК-ПОЛОСА) ================= */
         .about {
-            padding: 120px 10%;
+            padding: 70px 10%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 80px;
+            grid-template-columns: 0.85fr 1.15fr;
+            gap: 50px;
             align-items: center;
         }
         .about-img {
             width: 100%;
             border-radius: 8px;
             /* Ваше загруженное фото */
-            background: url('https://i.ibb.co/3WfK5fL/lavender.jpg') center/cover; 
-            aspect-ratio: 4/5;
+            background: url('assets/images/MyPhoto1.jpg') center/cover;
+            aspect-ratio: 16/9;
             position: relative;
+            overflow: hidden;
+        }
+
+        /* АНИМИРОВАННАЯ ПОДПИСЬ НА ФОТО */
+        .photo-caption {
+            position: absolute;
+            left: 0; bottom: 0; width: 100%;
+            padding: 50px 24px 18px;
+            background: linear-gradient(to top, rgba(17,17,17,0.9) 0%, rgba(17,17,17,0) 100%);
+            color: #fff;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        .about-img.active .photo-caption {
+            animation: captionIn 0.9s 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .photo-caption strong {
+            display: block;
+            font-family: var(--font-heading);
+            font-size: 18px; font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+        .photo-caption span {
+            display: block;
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 0.2em; margin-top: 5px; opacity: 0.85;
+        }
+        /* Пульсирующая акцентная линия */
+        .photo-caption::before {
+            content: '';
+            position: absolute;
+            top: 14px; left: 24px;
+            height: 3px; width: 0;
+            background: var(--accent-hover);
+            animation: captionLine 2.4s 1.5s ease-in-out infinite;
+        }
+        @keyframes captionIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes captionLine {
+            0% { width: 0; }
+            50% { width: 90px; }
+            100% { width: 0; }
+        }
+
+        /* ТЕКСТОВАЯ ЧАСТЬ */
+        .about-badge {
+            display: inline-block;
+            font-size: 11px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.18em;
+            color: var(--text-light);
+            border: 1px solid rgba(17,17,17,0.25);
+            border-radius: 30px;
+            padding: 7px 16px;
+            margin-bottom: 18px;
         }
         .about-text h2 {
             font-family: var(--font-heading);
-            font-size: 40px; margin-bottom: 30px;
+            font-size: 34px; margin-bottom: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
         .about-text p {
-            font-size: 18px; margin-bottom: 20px; color: var(--text-light);
+            font-size: 15px; margin-bottom: 14px; color: var(--text-light);
         }
+        .about-text .about-quote {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 16px;
+            color: var(--text-color);
+            font-weight: 400;
+            margin: 18px 0;
+        }
+        .about-features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            border-top: 1px solid rgba(17,17,17,0.12);
+            padding-top: 20px;
+            margin-top: 4px;
+        }
+        .about-features h4 {
+            font-size: 12px; font-weight: 500;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            margin-bottom: 8px;
+        }
+        .about-features p { font-size: 13px; margin-bottom: 0; }
 
         /* ================= ПОРТФОЛИО (АНИМИРОВАННОЕ) ================= */
         .portfolio { padding: 0 10% 120px; }
@@ -277,8 +367,8 @@
         }
         .portfolio-item:hover .portfolio-info::before { opacity: 0.6; }
 
-        .portfolio-info h3 { font-family: var(--font-heading); font-size: 28px; margin-bottom: 5px;}
-        .portfolio-info span { font-size: 14px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500;}
+        .portfolio-info h3 { font-family: var(--font-heading); font-size: 28px; margin-bottom: 5px; font-weight: 500; letter-spacing: 0.02em;}
+        .portfolio-info span { font-size: 14px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500;}
 
         /* ПЛАВАЮЩИЕ КНОПКИ СВЯЗИ */
         .floating-messengers {
@@ -290,10 +380,37 @@
             background: var(--text-color); color: #fff;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            font-family: var(--font-heading); font-weight: 700; font-size: 12px;
+            font-family: var(--font-heading); font-weight: 500; font-size: 12px; letter-spacing: 0.05em;
             transition: 0.3s;
         }
         .messenger-btn:hover { background: var(--accent-color); transform: translateY(-5px); }
+
+        /* ================= ФУТЕР ================= */
+        .footer {
+            background: #8fa3b3; /* серо-голубой */
+            color: #ffffff;
+            padding: 40px 10% 25px;
+        }
+        .footer-top {
+            display: flex; flex-wrap: wrap; align-items: center;
+            gap: 20px;
+            margin-bottom: 0;
+        }
+        .footer-link {
+            font-size: 16px;
+            letter-spacing: 0.02em;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+            transition: 0.3s;
+            opacity: 0.95;
+        }
+        .footer-link:hover { color: #ffffff; border-bottom-color: #ffffff; opacity: 1; }
+        .footer-meta {
+            border-top: 1px solid rgba(17,17,17,0.12);
+            padding-top: 24px;
+            display: flex; justify-content: space-between; gap: 15px; flex-wrap: wrap;
+        }
+        .footer-meta p { font-size: 12px; color: var(--text-light); }
 
         /* АДАПТИВНОСТЬ */
         @media (max-width: 900px) {
@@ -301,7 +418,10 @@
             .hero-image { position: relative; width: 100%; height: 40vh; margin-top: 40px; clip-path: none;}
             .hero h1 { font-size: 42px; }
             .entry-grid, .about, .portfolio-grid { grid-template-columns: 1fr; }
-            .about { padding: 80px 5%; }
+            .about { padding: 60px 5%; gap: 40px; }
+            .about-features { grid-template-columns: 1fr; gap: 16px; }
+            .footer { padding: 60px 5% 30px; }
+            .footer-meta { flex-direction: column; }
             header { padding: 15px 20px; }
         }
     </style>
@@ -315,6 +435,7 @@
             <a href="#start">С чего начать</a>
             <a href="#about">Обо мне</a>
             <a href="#portfolio">Портфолио</a>
+            <a href="#contacts">Контакты</a>
         </nav>
         <div class="lang-switch">
             <a href="index.html" class="active">RU</a>
@@ -345,16 +466,16 @@
             
             <div class="entry-card reveal">
                 <div>
-                    <h3>Консультация и аудит<br>перед покупкой</h3>
-                    <p>Независимая экспертиза недвижимости. Оценка потенциала участка, анализ планировки квартиры от застройщика. Я помогу вам сделать правильный выбор и избежать ошибок, опираясь на архитектурный расчет, а не на обещания риелторов.</p>
+                    <h3>Консультация и аудит<br>перед покупкой<br>недвижимости</h3>
+                    <p>Независимая экспертиза недвижимости. Оценка потенциала участка, анализ планировки квартиры от застройщика, возможности планировки дома с учетом потребностей семьи. Я помогу вам сделать правильный выбор и избежать ошибок, опираясь на архитектурный расчет, а не на обещания риелторов. Консультации проходят онлайн — я работаю дистанционно из Вьетнама и помогаю клиентам из любой точки мира.</p>
                 </div>
                 <a href="#">Записаться на онлайн-интервью →</a>
             </div>
 
             <div class="entry-card reveal" style="transition-delay: 0.1s;">
                 <div>
-                    <h3>Экспресс-планировка<br>и обмер</h3>
-                    <p>Фундамент любого грамотного ремонта. Профессиональный обмерный план и разработка эргономичного планировочного решения. Идеально для тех, кто планирует руководить ремонтом самостоятельно, но нуждается в твердой базе.</p>
+                    <h3>Экспресс-планировка<br>онлайн</h3>
+                    <p>Фундамент любого грамотного ремонта. Вы присылаете план застройщика или свои замеры — я разрабатываю профессиональный обмерный план и эргономичное планировочное решение. Работаю дистанционно из любой точки мира. Идеально для тех, кто планирует руководить ремонтом самостоятельно, но нуждается в твердой базе.</p>
                 </div>
                 <a href="#">Заказать планировку →</a>
             </div>
@@ -362,14 +483,30 @@
         </div>
     </section>
 
-    <!-- ОБО МНЕ (С ВАШИМ ФОТО ИЗ СООБЩЕНИЯ) -->
+    <!-- ОБО МНЕ (МОЙ ПОДХОД) -->
     <section id="about" class="about">
-        <div class="about-img reveal"></div>
+        <div class="about-img reveal">
+            <div class="photo-caption">
+                <strong>Евгения Ухина</strong>
+                <span>Руководитель студии 2015–2025</span>
+            </div>
+        </div>
         <div class="about-text reveal">
-            <h2>Живой ум и творческая смелость</h2>
+            <span class="about-badge">Философия • Мастерство</span>
+            <h2>Мой подход</h2>
             <p>Мой подход — это симбиоз инженерной точности и свободного художественного видения. Я глубоко увлечена процессом: от первого наброска карандашом на бумаге до финальной расстановки света в готовом интерьере.</p>
             <p>Большой опыт реализации проектов позволяет мне создавать не просто красивые 3D-картинки, а технически безупречные, живые пространства. Пространства, которые дышат вместе с вами.</p>
-            <p>Моя страсть — находить нестандартные объемно-пространственные решения, которые превращают стандартную коробку в дом вашей мечты.</p>
+            <p class="about-quote">Моя страсть — находить нестандартные объемно-пространственные решения, которые превращают стандартную коробку в дом вашей мечты.</p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <h4>Эргономика</h4>
+                    <p>Выверенный каждый миллиметр для сценариев повседневной жизни</p>
+                </div>
+                <div class="about-feature">
+                    <h4>Материальность</h4>
+                    <p>Тактильный натуральный камень, дерево и честная геометрия.</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -381,34 +518,50 @@
         <div class="portfolio-grid">
             
             <div class="portfolio-item reveal">
-                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80" alt="Проект 1">
+                <img src="assets/images/%D0%B2%D0%B8%D0%B4%20%D1%81%D0%BD%D0%B8%D0%B7%D1%83%20%D0%BD%D0%B0%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD.jpeg" alt="А-фрейм энд панорамный ресторан">
                 <div class="portfolio-info">
-                    <span>Реализация</span>
-                    <h3>Видовая квартира</h3>
+                    <span>Загородная архитектура</span>
+                    <h3>А-фрейм энд панорамный ресторан</h3>
                 </div>
             </div>
 
             <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
-                <img src="https://images.unsplash.com/photo-1613490908578-791cd9391054?auto=format&fit=crop&q=80" alt="Проект 2">
+                <img src="assets/images/Scandi1%20(1).jfif" alt="Scandi and woodhouse">
                 <div class="portfolio-info">
-                    <span>Архитектура</span>
-                    <h3>Лесная Вилла</h3>
+                    <span>Жилой интерьер</span>
+                    <h3>Scandi and woodhouse</h3>
                 </div>
             </div>
 
             <div class="portfolio-item reveal">
-                <img src="https://images.unsplash.com/photo-1544457070-4cd773b4d71e?auto=format&fit=crop&q=80" alt="Проект 3">
+                <img src="assets/images/Micluho%20(1).jpg" alt="Жилой интерьер Северное море">
                 <div class="portfolio-info">
-                    <span>Концепт</span>
-                    <h3>Ручная графика</h3>
+                    <span>Интерьер апартаментов</span>
+                    <h3>Жилой интерьер «Северное море»</h3>
                 </div>
             </div>
 
             <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
-                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80" alt="Проект 4">
+                <img src="assets/images/Scandi.jpg" alt="Цветовой и целевой коллаж">
                 <div class="portfolio-info">
-                    <span>Дизайн</span>
-                    <h3>Апартаменты</h3>
+                    <span>Быстрое решение и комплектация</span>
+                    <h3>Цветовой и целевой коллаж</h3>
+                </div>
+            </div>
+
+            <div class="portfolio-item reveal">
+                <img src="assets/images/PhuketInteriors%20(2).jpg" alt="Проект хаммама на Пхукете">
+                <div class="portfolio-info">
+                    <span>Рабочая документация</span>
+                    <h3>Проект хаммама на Пхукете</h3>
+                </div>
+            </div>
+
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="assets/images/GlampingGoloshubiha%20(2).jpg" alt="Ручные эскизы и генерация идей">
+                <div class="portfolio-info">
+                    <span>Разработка концепции</span>
+                    <h3>Ручные эскизы и генерация идей</h3>
                 </div>
             </div>
 
@@ -417,9 +570,29 @@
 
     <!-- МЕССЕНДЖЕРЫ -->
     <div class="floating-messengers">
-        <a href="#" class="messenger-btn">TG</a>
-        <a href="#" class="messenger-btn">WA</a>
+        <a href="https://t.me/+79522108979" target="_blank" rel="noopener" class="messenger-btn">TG</a>
+        <a href="https://wa.me/79522108979" target="_blank" rel="noopener" class="messenger-btn">WA</a>
     </div>
+
+    <!-- ФУТЕР -->
+    <footer id="contacts" class="footer">
+        <div class="footer-inner reveal">
+            <div class="footer-top">
+                <a href="mailto:r9522108979@gmail.com" class="footer-email">r9522108979@gmail.com</a>
+                <a href="https://www.instagram.com/artradostno/" target="_blank" rel="noopener" class="footer-ig">Instagram</a>
+            </div>
+            <div class="footer-contacts">
+                
+                <a href="https://t.me/+79522108979" target="_blank" rel="noopener" class="footer-link">Telegram</a>
+                <a href="https://wa.me/79522108979" target="_blank" rel="noopener" class="footer-link">WhatsApp</a>
+                <a href="https://max.ru/u/f9LHodD0cOKd9dm1kCgbAmC-YsJT4DcXaSL3hvX0QPvfkbz9r7EJrE3jOOw" target="_blank" rel="noopener" class="footer-link">MAX</a>
+            </div>
+            <div class="footer-meta">
+                <p>Работаю дистанционно по всему миру · сейчас — Вьетнам</p>
+                <p>© 2025 Евгения Ухина · Архитектура и дизайн</p>
+            </div>
+        </div>
+    </footer>
 
     <!-- СКРИПТ АНИМАЦИИ ПРИ ПРОКРУТКЕ -->
     <script>
