@@ -1,0 +1,9 @@
+{
+  "routes": [
+    { "src": "^/$", "dest": "/index.html" },
+    { "src": "^/en$", "dest": "/en/index.html" },
+    { "src": "^/en/$", "dest": "/en/index.html" },
+    { "src": "^/index\\.html$", "dest": "/", "status": 301 },
+    { "src": "^/en/index\\.html$", "dest": "/en", "status": 301 }
+  ]
+}

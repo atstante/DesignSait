@@ -1,0 +1,248 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eugenia Ukhina | Architecture and Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Montserrat:wght@500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-color:#ffffff; --text-color:#111111; --text-light:#555555; --accent-color:#2b45ff; --accent-hover:#9c63ff; --section-bg:#f4f4f6; --font-heading:'Montserrat',sans-serif; --font-body:'Inter',sans-serif; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html { scroll-behavior:smooth; }
+        body { font-family:var(--font-body); background:var(--bg-color); color:var(--text-color); line-height:1.6; overflow-x:hidden; }
+        a { text-decoration:none; color:inherit; }
+        .reveal { opacity:0; transform:translateY(50px); transition:all 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .reveal.active { opacity:1; transform:translateY(0); }
+        header { position:fixed; top:0; width:100%; padding:25px 50px; display:flex; justify-content:space-between; align-items:center; z-index:1000; transition:0.4s; mix-blend-mode:difference; color:#fff; }
+        header.scrolled { background:rgba(255,255,255,0.98); mix-blend-mode:normal; color:var(--text-color); padding:15px 50px; box-shadow:0 10px 30px rgba(0,0,0,0.03); }
+        .logo { font-family:var(--font-heading); font-size:24px; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; }
+        .nav-links { display:flex; gap:40px; font-size:14px; font-weight:500; }
+        .nav-links a { transition:color 0.3s; }
+        .nav-links a:hover { color:var(--accent-hover); }
+        .lang-switch a { margin-left:15px; font-weight:500; opacity:0.4; transition:0.3s; }
+        .lang-switch a.active, .lang-switch a:hover { opacity:1; }
+        .hero { height:100vh; display:flex; align-items:center; padding:0 10%; position:relative; background:var(--section-bg); overflow:hidden; }
+        .hero-content { position:relative; z-index:2; max-width:800px; }
+        .text-mask { overflow:hidden; display:block; padding-bottom:0.15em; margin-bottom:-0.15em; }
+        .text-mask span { display:block; transform:translateY(115%); animation:slideUp 1s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .hero h1 { font-family:var(--font-heading); font-size:5.5vw; line-height:1.1; letter-spacing:0.02em; font-weight:800; margin-bottom:30px; color:var(--text-color); }
+        .text-mask:nth-child(2) span { animation-delay:0.1s; }
+        .text-mask:nth-child(3) span { animation-delay:0.2s; }
+        .hero p { font-size:18px; color:var(--text-light); max-width:500px; margin-bottom:40px; opacity:0; animation:fadeIn 1s 0.6s forwards; }
+        .hero-image { position:absolute; right:0; top:0; width:50%; height:100%; background:url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80') center/cover; clip-path:inset(100% 0 0 0); animation:revealImage 1.5s 0.4s cubic-bezier(0.77,0,0.175,1) forwards; }
+        @keyframes slideUp { to { transform:translateY(0); } }
+        @keyframes fadeIn { to { opacity:1; } }
+        @keyframes revealImage { to { clip-path:inset(0 0 0 0); } }
+        .btn { display:inline-block; padding:16px 32px; background:var(--text-color); color:#fff; font-family:var(--font-heading); font-weight:500; font-size:14px; text-transform:uppercase; letter-spacing:0.12em; border-radius:4px; transition:all 0.3s; opacity:0; animation:fadeIn 1s 0.8s forwards; }
+        .btn:hover { background:var(--accent-color); transform:translateY(-3px); box-shadow:0 15px 25px rgba(43,69,255,0.2); }
+        .entry-services { padding:120px 10%; background:var(--bg-color); }
+        .section-header { margin-bottom:60px; }
+        .section-header h2 { font-family:var(--font-heading); font-size:48px; font-weight:700; letter-spacing:0.03em; }
+        .entry-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; }
+        .entry-card { background:var(--section-bg); padding:60px 50px; border-radius:8px; transition:0.4s; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:space-between; }
+        .entry-card::before { content:''; position:absolute; top:0; left:0; width:100%; height:4px; background:var(--accent-color); transform:scaleX(0); transform-origin:left; transition:0.4s; }
+        .entry-card:hover { transform:translateY(-10px); box-shadow:0 20px 40px rgba(0,0,0,0.05); background:#fff; }
+        .entry-card:hover::before { transform:scaleX(1); }
+        .entry-card h3 { font-family:var(--font-heading); font-size:28px; margin-bottom:20px; font-weight:500; letter-spacing:0.02em; }
+        .entry-card p { color:var(--text-light); margin-bottom:40px; font-size:16px; }
+        .entry-card a { font-weight:500; text-decoration:underline; color:var(--accent-color); }
+        .about { padding:70px 10%; display:grid; grid-template-columns:0.85fr 1.15fr; gap:50px; align-items:center; }
+        .about-img { width:100%; border-radius:8px; background:url('assets/images/MyPhoto1.jpg') center/cover; aspect-ratio:16/9; position:relative; overflow:hidden; }
+        .photo-caption { position:absolute; left:0; bottom:0; width:100%; padding:50px 24px 18px; background:linear-gradient(to top,rgba(17,17,17,0.9) 0%,rgba(17,17,17,0) 100%); color:#fff; opacity:0; transform:translateY(30px); }
+        .about-img.active .photo-caption { animation:captionIn 0.9s 0.6s cubic-bezier(0.16,1,0.3,1) forwards; }
+        .photo-caption strong { display:block; font-family:var(--font-heading); font-size:18px; font-weight:500; letter-spacing:0.1em; }
+        .photo-caption span { display:block; font-size:11px; text-transform:uppercase; letter-spacing:0.2em; margin-top:5px; opacity:0.85; }
+        .photo-caption::before { content:''; position:absolute; top:14px; left:24px; height:3px; width:0; background:var(--accent-hover); animation:captionLine 2.4s 1.5s ease-in-out infinite; }
+        @keyframes captionIn { to { opacity:1; transform:translateY(0); } }
+        @keyframes captionLine { 0%{width:0} 50%{width:90px} 100%{width:0} }
+        .about-badge { display:inline-block; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.18em; color:var(--text-light); border:1px solid rgba(17,17,17,0.25); border-radius:30px; padding:7px 16px; margin-bottom:18px; }
+        .about-text h2 { font-family:var(--font-heading); font-size:34px; margin-bottom:18px; text-transform:uppercase; letter-spacing:0.06em; }
+        .about-text p { font-size:15px; margin-bottom:14px; color:var(--text-light); }
+        .about-text .about-quote { border-left:3px solid var(--accent-color); padding-left:16px; color:var(--text-color); font-weight:400; margin:18px 0; }
+        .about-features { display:grid; grid-template-columns:1fr 1fr; gap:30px; border-top:1px solid rgba(17,17,17,0.12); padding-top:20px; margin-top:4px; }
+        .about-features h4 { font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.15em; margin-bottom:8px; }
+        .about-features p { font-size:13px; margin-bottom:0; }
+        .portfolio { padding:0 10% 120px; }
+        .portfolio-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:30px; }
+        .portfolio-item { position:relative; border-radius:8px; overflow:hidden; aspect-ratio:4/3; cursor:pointer; }
+        .portfolio-item img { width:100%; height:100%; object-fit:cover; transition:transform 0.8s cubic-bezier(0.16,1,0.3,1); }
+        .portfolio-info { position:absolute; bottom:0; left:0; width:100%; padding:40px; background:linear-gradient(to top,rgba(17,17,17,0.9) 0%,rgba(17,17,17,0) 100%); color:#fff; transform:translateY(20px); opacity:0; transition:all 0.4s ease; }
+        .portfolio-item:hover img { transform:scale(1.05); }
+        .portfolio-item:hover .portfolio-info { transform:translateY(0); opacity:1; }
+        .portfolio-info::before { content:''; position:absolute; bottom:0; left:0; width:100%; height:100%; background-color:var(--accent-hover); mix-blend-mode:color; opacity:0; transition:0.5s; z-index:-1; }
+        .portfolio-item:hover .portfolio-info::before { opacity:0.6; }
+        .portfolio-info h3 { font-family:var(--font-heading); font-size:28px; margin-bottom:5px; font-weight:500; letter-spacing:0.02em; }
+        .portfolio-info span { font-size:14px; text-transform:uppercase; letter-spacing:0.12em; font-weight:500; }
+        .floating-messengers { position:fixed; bottom:30px; right:30px; display:flex; flex-direction:column; gap:15px; z-index:1000; }
+        .messenger-btn { width:55px; height:55px; background:var(--text-color); color:#fff; border-radius:50%; display:flex; justify-content:center; align-items:center; font-family:var(--font-heading); font-weight:500; font-size:12px; letter-spacing:0.05em; transition:0.3s; }
+        .messenger-btn:hover { background:var(--accent-color); transform:translateY(-5px); }
+        .footer { background:#c7c3d9; color:#3a3a4a; padding:70px 10% 60px; }
+        .footer-top { display:flex; flex-wrap:wrap; align-items:flex-start; gap:60px; justify-content:flex-start; text-align:left; margin-bottom:50px; }
+        .footer-link { font-size:16px; letter-spacing:0.02em; color:#3a3a4a; padding-bottom:4px; border-bottom:1px solid rgba(58,58,74,0.25); transition:all 0.3s ease; opacity:0.8; }
+        .footer-link:hover { color:#1a1a1a; border-bottom-color:#1a1a1a; opacity:1; }
+        .footer-meta { border-top:1px solid rgba(58,58,74,0.15); padding-top:30px; display:flex; flex-direction:column; gap:10px; align-items:flex-start; text-align:left; }
+        .footer-meta p { font-size:12px; color:#8a8a9a; letter-spacing:0.05em; opacity:0.7; }
+        @media (max-width:900px){ .hero{height:auto;min-height:100svh;padding:120px 6% 60px;flex-direction:column;justify-content:center}.hero-content{max-width:100%}.hero h1{font-size:clamp(32px,9vw,42px);margin-bottom:20px}.hero p{font-size:16px;margin-bottom:30px}.btn{width:fit-content;max-width:100%;padding:14px 28px}.hero-image{position:relative;width:100%;height:38vh;margin-top:40px;clip-path:none}.entry-grid,.about,.portfolio-grid{grid-template-columns:1fr}.entry-services{padding:70px 6%}.entry-card{padding:36px 26px}.section-header h2{font-size:clamp(26px,7vw,34px);margin-bottom:30px}.entry-card h3{font-size:22px}.entry-card p{font-size:15px}.about{padding:60px 6%;gap:40px}.about-img{aspect-ratio:4/3}.about-text h2{font-size:26px}.about-features{grid-template-columns:1fr;gap:16px}.portfolio{padding:0 6% 70px}.portfolio-info{padding:24px 20px}.portfolio-info h3{font-size:20px}.portfolio-info span{font-size:12px}.footer{padding:44px 6% 30px}.footer-top{gap:28px;margin-bottom:32px}.footer-link{font-size:15px}.footer-meta{flex-direction:column}header{padding:15px 20px}.nav-links{display:none}.floating-messengers{bottom:20px;right:20px;gap:12px}.messenger-btn{width:48px;height:48px;font-size:11px} }
+        @media (max-width:480px){ .hero h1{font-size:30px} .footer-top{gap:24px} .floating-messengers{bottom:16px;right:16px} .messenger-btn{width:44px;height:44px;font-size:10px} }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="logo">E.Ukhina</div>
+        <nav class="nav-links">
+            <a href="#start">Getting Started</a>
+            <a href="#about">About Me</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contacts">Contacts</a>
+        </nav>
+        <div class="lang-switch">
+            <a href="../index.html">RU</a>
+            <a href="en/index.html" class="active">EN</a>
+        </div>
+    </header>
+    <section class="hero">
+        <div class="hero-content">
+            <h1>
+                <span class="text-mask"><span>Architecture</span></span>
+                <span class="text-mask"><span>and design</span></span>
+                <span class="text-mask"><span>of spaces.</span></span>
+            </h1>
+            <p>A fresh look, passion for my work, and extensive practical experience in design and implementation.</p>
+            <a href="#start" class="btn">Discuss project</a>
+        </div>
+        <div class="hero-image"></div>
+    </section>
+    <section id="start" class="entry-services">
+        <div class="section-header reveal">
+            <h2>First step to the perfect home</h2>
+        </div>
+        <div class="entry-grid">
+            <div class="entry-card reveal">
+                <div>
+                    <h3>Consultation and audit<br>before buying<br>real estate</h3>
+                    <p>Independent real estate expertise. Assessment of land plot potential, analysis of developer apartment layout, house layout possibilities considering family needs. I will help you make the right choice and avoid mistakes, relying on architectural calculation rather than realtor promises. Consultations are held online — I work remotely from Vietnam and help clients from anywhere in the world.</p>
+                </div>
+                <a href="#">Book an online interview →</a>
+            </div>
+            <div class="entry-card reveal" style="transition-delay: 0.1s;">
+                <div>
+                    <h3>Express floor planning<br>online</h3>
+                    <p>Foundation of any competent renovation. You send the developer's plan or your measurements — I develop a professional measurement plan and ergonomic layout solution. I work remotely from anywhere in the world. Ideal for those planning to manage renovation themselves but need a solid foundation.</p>
+                </div>
+                <a href="#">Order floor planning →</a>
+            </div>
+        </div>
+    </section>
+    <section id="about" class="about">
+        <div class="about-img reveal">
+            <div class="photo-caption">
+                <strong>Eugenia Ukhina</strong>
+                <span>Studio Director 2015–2025</span>
+            </div>
+        </div>
+        <div class="about-text reveal">
+            <span class="about-badge">Philosophy • Craftsmanship</span>
+            <h2>My approach</h2>
+            <p>My approach is a symbiosis of engineering precision and free artistic vision. I am deeply passionate about the process: from the first pencil sketch on paper to the final lighting arrangement in the finished interior.</p>
+            <p>Extensive project implementation experience allows me to create not just beautiful 3D renderings, but technically flawless, living spaces. Spaces that breathe with you.</p>
+            <p class="about-quote">My passion is finding non-standard volumetric-spatial solutions that turn a standard box into the home of your dreams.</p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <h4>Ergonomics</h4>
+                    <p>Every millimeter calculated for everyday life scenarios</p>
+                </div>
+                <div class="about-feature">
+                    <h4>Materiality</h4>
+                    <p>Tactile natural stone, wood, and honest geometry.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="portfolio" class="portfolio">
+        <div class="section-header reveal">
+            <h2>Selected projects</h2>
+        </div>
+        <div class="portfolio-grid">
+            <div class="portfolio-item reveal">
+                <img src="assets/images/%D0%B2%D0%B8%D0%B4%20%D1%81%D0%BD%D0%B8%D0%B7%D1%83%20%D0%BD%D0%B0%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD.jpeg" alt="A-frame and panoramic restaurant">
+                <div class="portfolio-info">
+                    <span>Country architecture</span>
+                    <h3>A-frame and panoramic restaurant</h3>
+                </div>
+            </div>
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="assets/images/Scandi1%20(1).jfif" alt="Scandi and woodhouse">
+                <div class="portfolio-info">
+                    <span>Residential interior</span>
+                    <h3>Scandi and woodhouse</h3>
+                </div>
+            </div>
+            <div class="portfolio-item reveal">
+                <img src="assets/images/Micluho%20(1).jpg" alt="Residential interior North Sea">
+                <div class="portfolio-info">
+                    <span>Apartment interior</span>
+                    <h3>Residential interior «Northern Sea»</h3>
+                </div>
+            </div>
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="assets/images/Scandi.jpg" alt="Color and target collage">
+                <div class="portfolio-info">
+                    <span>Quick solution and sourcing</span>
+                    <h3>Color and target collage</h3>
+                </div>
+            </div>
+            <div class="portfolio-item reveal">
+                <img src="assets/images/PhuketInteriors%20(2).jpg" alt="Hammam project in Phuket">
+                <div class="portfolio-info">
+                    <span>Working documentation</span>
+                    <h3>Hammam project in Phuket</h3>
+                </div>
+            </div>
+            <div class="portfolio-item reveal" style="transition-delay: 0.1s;">
+                <img src="assets/images/GlampingGoloshubiha%20(2).jpg" alt="Hand sketches and idea generation">
+                <div class="portfolio-info">
+                    <span>Concept development</span>
+                    <h3>Hand sketches and idea generation</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="floating-messengers">
+        <a href="https://t.me/+79522108979" target="_blank" rel="noopener" class="messenger-btn">TG</a>
+        <a href="https://wa.me/79522108979" target="_blank" rel="noopener" class="messenger-btn">WA</a>
+    </div>
+    <footer id="contacts" class="footer">
+        <div class="footer-inner reveal">
+            <div class="footer-top">
+                <a href="mailto:r9522108979@gmail.com" class="footer-link">r9522108979@gmail.com</a>
+                <a href="https://www.instagram.com/artradostno/" target="_blank" rel="noopener" class="footer-link">Instagram</a>
+                <a href="https://t.me/+79522108979" target="_blank" rel="noopener" class="footer-link">Telegram</a>
+                <a href="https://wa.me/79522108979" target="_blank" rel="noopener" class="footer-link">WhatsApp</a>
+                <a href="https://max.ru/u/f9LHodD0cOKd9dm1kCgbAmC-YsJT4DcXaSL3hvX0QPvfkbz9r7EJrE3jOOw" target="_blank" rel="noopener" class="footer-link">MAX</a>
+            </div>
+            <div class="footer-meta">
+                <p>Working remotely worldwide · currently — Vietnam</p>
+                <p>© 2025 Eugenia Ukhina · Architecture and design</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const header = document.getElementById('header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
